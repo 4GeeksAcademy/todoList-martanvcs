@@ -9,3 +9,75 @@
     import 'relative/path/to/stylesheet.scss';
 
 */
+/* Centrado de página */
+body {
+    font-family: "Arial", sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  .container {
+    width: 500px;
+    margin: 0 auto;
+    padding-top: 50px;
+  }
+  
+  .todo-container {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  
+  ul li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  ul li input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+  }
+  
+  .delete-task {
+    cursor: pointer;
+    visibility: hidden;
+    font-size: 20px;
+    color: #c00;
+  }
+  
+  ul li:hover .delete-task {
+    visibility: visible;
+  }
+  
+  .no-task {
+    color: #aaa;
+    text-align: center;
+  }
+  
+  .tasks-left {
+    padding-top: 10px;
+    font-size: 14px;
+    color: #888;
+    text-align: right;
+  }
+  
+  
+
+  
+
