@@ -1,81 +1,101 @@
-/* 
-
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
-
-*/
-/* Centrado de página */
 body {
-    font-family: "Arial", sans-serif;
-    background-color: #f4f4f4;
-  }
-  
-  .container {
-    width: 500px;
-    margin: 0 auto;
-    padding-top: 50px;
-  }
-  
-  .todo-container {
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    padding: 20px;
-    border-radius: 5px;
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  ul {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-  
-  ul li {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  ul li input {
-    border: none;
-    outline: none;
-    font-size: 16px;
-    width: 100%;
-  }
-  
-  .delete-task {
-    cursor: pointer;
-    visibility: hidden;
-    font-size: 20px;
-    color: #c00;
-  }
-  
-  ul li:hover .delete-task {
-    visibility: visible;
-  }
-  
-  .no-task {
-    color: #aaa;
-    text-align: center;
-  }
-  
-  .tasks-left {
-    padding-top: 10px;
-    font-size: 14px;
-    color: #888;
-    text-align: right;
-  }
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.todo-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+input[type="text"] {
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-right: 10px;
+}
+
+.btn-add {
+  padding: 10px 16px;
+  font-size: 16px;
+  background-color: #38a169;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-add:hover {
+  background-color: #2f855a;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+li {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.no-task {
+  text-align: center;
+  color: #aaa;
+}
+
+.delete-task {
+  color: #e53e3e;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.btn-warning {
+  margin-top: 15px;
+  width: 100%;
+  background-color: #e53e3e;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-warning:hover {
+  background-color: #c53030;
+}
+
+p {
+  text-align: right;
+  color: #555;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+
   
   
 
