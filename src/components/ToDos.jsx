@@ -1,120 +1,117 @@
 import React, { useEffect, useState } from "react";
-
-const USERNAME = "martanvcs"; 
-const API_URL = `https://playground.4geeks.com/apis/fake/todos/${USERNAME}`;
+const USERNAME = "martanvcs";
+const API_BASE = "https://playground.4geeks.com/todo";
 
 const ToDos = () => {
   const [tasks, setTasks] = useState([]);
-  const [input, setInput] = useState("");
+  const [newTask, setNewTask] = useState("");
 
+ 
   useEffect(() => {
-    createUser();
+    fetch(`${API_BASE}/users/${USERNAME}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    })
+      .then((res) => {
+        if (res.ok) console.log("✅ Usuario creado");
+        else if (res.status === 400) console.log("⚠️ Usuario ya existe");
+        else throw new Error("❌ Error al crear usuario");
+      })
+      .then(fetchTasks)
+      .catch((err) => console.error("Error:", err));
   }, []);
 
-  const createUser = () => {
-    fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify([]),
-      headers: { "Content-Type": "application/json" }
-    })
-      .then((res) => {
-        if (!res.ok && res.status !== 400) throw new Error();
-        return res.json();
-      })
-      .then(() => fetchTasks())
-      .catch(() => {});
-  };
-
   const fetchTasks = () => {
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then((data) => setTasks(Array.isArray(data) ? data : []))
-      .catch(() => {});
-  };
-
-  const updateTasks = (newTasks) => {
-    return fetch(API_URL, {
-      method: "PUT",
-      body: JSON.stringify(newTasks),
-      headers: { "Content-Type": "application/json" }
-    })
+    fetch(`${API_BASE}/users/${USERNAME}`)
       .then((res) => {
-        if (!res.ok) throw new Error();
+        if (!res.ok) throw new Error("Error al cargar tareas");
         return res.json();
       })
-      .then(() => fetchTasks())
-      .catch(() => setTasks(newTasks));
+      .then((data) => setTasks(data.todos || []))
+      .catch((err) => console.error(err));
   };
 
-  const handleAddTask = (e) => {
-    if (e.key === "Enter" && input.trim() !== "") {
-      const newTasks = [...tasks, { label: input.trim(), done: false }];
-      updateTasks(newTasks);
-      setInput("");
-    }
-  };
+  const handleAddTask = () => {
+    const trimmed = newTask.trim();
+    if (!trimmed) return;
 
-  const handleButtonAddTask = () => {
-    if (input.trim() !== "") {
-      const newTasks = [...tasks, { label: input.trim(), done: false }];
-      updateTasks(newTasks);
-      setInput("");
-    }
-  };
-
-  const handleDeleteTask = (index) => {
-    const newTasks = tasks.filter((_, i) => i !== index);
-    updateTasks(newTasks);
-  };
-
-  const clearAllTasks = () => {
-    fetch(API_URL, { method: "DELETE" })
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        setTasks([]);
+    fetch(`${API_BASE}/todos/${USERNAME}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ label: trimmed, is_done: false }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setNewTask("");
+        fetchTasks();
       })
-      .catch(() => setTasks([]));
+      .catch((err) => console.error(err));
+  };
+
+  
+  const handleDelete = (id) => {
+    fetch(`${API_BASE}/todos/${id}`, { method: "DELETE" })
+      .then(() => fetchTasks())
+      .catch((err) => console.error(err));
+  };
+
+ 
+  const handleClearAll = () => {
+    Promise.all(tasks.map((t) =>
+      fetch(`${API_BASE}/todos/${t.id}`, { method: "DELETE" })
+    ))
+      .then(() => setTasks([]))
+      .catch((err) => console.error(err));
   };
 
   return (
-    <div className="todo-container">
-      <input
-        type="text"
-        placeholder="Escribe una tarea y presiona Enter"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleAddTask}
-      />
-      <button className="btn-add" onClick={handleButtonAddTask}>
-        Añadir
-      </button>
+    <div className="container mt-4">
+      <div className="card shadow rounded-4">
+        <div className="card-body">
+          <h3 className="card-title text-center mb-4">📝 Lista de Tareas</h3>
 
-      <ul>
-        {tasks.length === 0 ? (
-          <li className="no-task">No hay tareas</li>
-        ) : (
-          tasks.map((task, index) => (
-            <li key={index}>
-              {task.label}
-              <span
-                className="delete-task"
-                onClick={() => handleDeleteTask(index)}
-              >
-                ×
-              </span>
-            </li>
-          ))
-        )}
-      </ul>
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              value={newTask}
+              onChange={(e) => setNewTask(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
+              className="form-control"
+              placeholder="Nueva tarea..."
+            />
+            <button className="btn btn-primary" onClick={handleAddTask}>
+              Añadir
+            </button>
+          </div>
 
-      <button className="btn-warning" onClick={clearAllTasks}>
-        Eliminar todas las tareas
-      </button>
-      <p>{tasks.length} tarea(s) pendiente(s)</p>
+          {tasks.length === 0 ? (
+            <p className="text-muted text-center">No hay tareas. ¡Agrega una!</p>
+          ) : (
+            <ul className="list-group mb-3">
+              {tasks.map((task) => (
+                <li key={task.id} className="list-group-item d-flex justify-content-between align-items-center">
+                  {task.label}
+                  <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(task.id)}>
+                    🗑️
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {tasks.length > 0 && (
+            <div className="d-grid">
+              <button className="btn btn-danger" onClick={handleClearAll}>
+                Limpiar todas las tareas
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
 export default ToDos;
-
 
